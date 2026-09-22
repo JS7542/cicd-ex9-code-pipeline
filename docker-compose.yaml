@@ -1,6 +1,6 @@
 services:
   my-service-fe:
-    image: ${ECR_REGISTRY}/${NGINX_ECR_REPOSITORY}:${IMAGE_TAG}
+    image: ${ECR_REGISTRY}/${NGINX_ECR_REPOSITORY}:${ECR_NGINX_REPOSITORY}
     container_name: nginx-container
 
     ports:
@@ -15,7 +15,7 @@ services:
       - app-network
 
   my-service-be:
-    image: ${ECR_REGISTRY}/${FASTAPI_ECR_REPOSITORY}:${IMAGE_TAG}
+    image: ${ECR_REGISTRY}/${FASTAPI_ECR_REPOSITORY}:${ECR_FASTAPI_REPOSITORY}
 
     container_name: fastapi-container
 

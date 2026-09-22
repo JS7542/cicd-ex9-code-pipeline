@@ -208,11 +208,12 @@ resource "aws_launch_template" "asg_lt" {
                 systemctl start docker
                 systemctl enable docker
                 usermod -aG docker ec2-user
-                wget -q \
-                "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m)" \
-                -O /usr/local/lib/docker/cli-plugins/docker-compose
 
-                chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
+                DOCKER_COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')
+                mkdir -p /usr/libexec/docker/cli-plugins
+                curl -SL "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-linux-x86_64" -o /usr/libexec/docker/cli-plugins/docker-compose
+                chmod +x /usr/libexec/docker/cli-plugins/docker-compose
+                ln -sf /usr/libexec/docker/cli-plugins/docker-compose /usr/local/bin/docker-compose
 
                 # 설치 확인
                 docker --version
