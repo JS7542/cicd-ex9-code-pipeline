@@ -200,22 +200,30 @@ resource "aws_launch_template" "asg_lt" {
 
 
       user_data = base64encode(<<-EOF
-              #!/bin/bash
-              dnf update -y
-              # ruby: CodeDeploy서비스 개발 언어, codedeploy-agent 설치를 위해 반드시 필요
-              dnf install -y ruby wget docker
+                #!/bin/bash
+                dnf update -y
+                # ruby: CodeDeploy서비스 개발 언어, codedeploy-agent 설치를 위해 반드시 필요
+                dnf install -y ruby wget docker
 
-              systemctl start docker
-              systemctl enable docker
-              usermod -aG docker ec2-user
+                systemctl start docker
+                systemctl enable docker
+                usermod -aG docker ec2-user
+                wget -q \
+                "https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m)" \
+                -O /usr/local/lib/docker/cli-plugins/docker-compose
 
-              cd /tmp
-              wget https://aws-codedeploy-ap-south-1.s3.ap-south-1.amazonaws.com/latest/install
-              chmod +x ./install
-              ./install auto
+                chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 
-              systemctl start codedeploy-agent
-              systemctl enable codedeploy-agent
+                # 설치 확인
+                docker --version
+                docker compose version
+                cd /tmp
+                wget https://aws-codedeploy-ap-south-1.s3.ap-south-1.amazonaws.com/latest/install
+                chmod +x ./install
+                ./install auto
+
+                systemctl start codedeploy-agent
+                systemctl enable codedeploy-agent
               EOF
   )
   
