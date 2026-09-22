@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #1. 변수 설정
-AWS_REGION="us-east-1"
+AWS_REGION="ap-east-1"
 ECR_REPOSITORY="nginx"
 CONTAINER_NAME="nginx-app"
 # 권한 획득
