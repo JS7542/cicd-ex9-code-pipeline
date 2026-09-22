@@ -62,6 +62,13 @@ jobs:
       - name: Upload deployment bundle to S3
         run: |
           aws s3 cp ./build/bundle.zip s3://${{ env.S3_BUCKET_NAME }}/bundle-${{ github.sha }}.zip
+
+
+            - name: Check CodeDeploy deployment groups
+        run: |
+          aws deploy list-deployment-groups \
+            --application-name "$CODE_DEPLOY_APP_NAME" \
+            --region "${{ env.AWS_CODE_DEPLOY_REGION }}"
       # 7. CodeDeploy 배포 생성
       - name: Create CodeDeploy deployment
         run: |
