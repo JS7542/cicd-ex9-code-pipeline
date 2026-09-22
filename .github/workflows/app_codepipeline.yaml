@@ -14,7 +14,7 @@ env:
 
 
 
-job:
+jobs:
   build-and-update:
     runs-on: ubuntu-latest
     
