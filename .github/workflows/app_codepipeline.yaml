@@ -35,18 +35,20 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      # 3. ECR 에 Docker 이미지 빌드 및 푸시
+      # 3. ECR에 Docker 이미지 빌드 및 푸시
       - name: Build and push Docker image to Amazon ECR
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $ECR_REPOSITORY:$IMAGE_TAG \
-                       -t $ECR_REPOSITORY:latest \
-                       -f ./nginx/Dockerfile ./nginx
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-      # 4. (중요) Zip 압축 단계 전에 chmod -x 추가
+          docker build \
+            -t "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" \
+            -t "$ECR_REGISTRY/$ECR_REPOSITORY:latest" \
+            -f ./nginx/Dockerfile ./nginx
+
+          docker push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          docker push "$ECR_REGISTRY/$ECR_REPOSITORY:latest"
+      # 4. (중요) Zip 압축 단계 전에 chmod +x 추가
 
       # 5. CodeDeploy 배포 번들 생성
 
