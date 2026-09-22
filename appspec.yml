@@ -19,5 +19,5 @@ permissions:
 hooks:
   ApplicationStart:
     - location: scripts/deploy.sh                      # files.destination의 하위경로, 실행할 스크립트 정의
-      timeout: 300
+      timeout: 600
       runas: root                                     # 스크립트를 실행할 사용자 지정

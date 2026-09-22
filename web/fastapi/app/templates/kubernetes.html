@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <div class="brand">Docker Web Lab</div>
+    <nav><a href="/">홈</a><a href="/kubernetes">Kubernetes</a><a href="/status.html">상태 확인</a><a href="/about.html">소개</a></nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="badge">Jinja2 Dynamic Page</span>
+    <h1>{{ title }}</h1>
+    <p>이 페이지는 Nginx의 정적 HTML이 아니라 FastAPI가 Jinja2 템플릿을 렌더링해서 반환합니다.</p>
+  </section>
+
+  <section class="cards">
+    {% for item in features %}
+    <article class="card">
+      <h2>{{ item.name }}</h2>
+      <p>{{ item.desc }}</p>
+    </article>
+    {% endfor %}
+  </section>
+
+  <section class="panel">
+    <h2>통신 흐름</h2>
+    <pre>Browser → Nginx /kubernetes → FastAPI → Jinja2 Template → Browser</pre>
+  </section>
+</main>
+</body>
+</html>

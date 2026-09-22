@@ -1,0 +1,29 @@
+services:
+  my-service-fe:
+    image: ${ECR_REGISTRY}/${NGINX_ECR_REPOSITORY}:${IMAGE_TAG}
+    container_name: nginx-container
+
+    ports:
+      - "80:80"
+
+    volumes:
+      - /home/ec2-user/nginx/logs:/var/log/nginx
+
+    restart: always
+
+    networks:
+      - app-network
+
+  my-service-be:
+    image: ${ECR_REGISTRY}/${FASTAPI_ECR_REPOSITORY}:${IMAGE_TAG}
+
+    container_name: fastapi-container
+
+    restart: always
+
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

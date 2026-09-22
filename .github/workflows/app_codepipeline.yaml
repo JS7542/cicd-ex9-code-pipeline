@@ -8,7 +8,8 @@ on:
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   AWS_CODE_DEPLOY_REGION: ${{ secrets.AWS_CODE_DEPLOY_REGION }}
-  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+  ECR_NGINX_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+  ECR_FASTAPI_REPOSITORY: ${{ secrets.ECR_FASTAPI_REPOSITORY }}
   S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
   CODE_DEPLOY_APP_NAME: ${{ secrets.CODE_DEPLOY_APP_NAME }}
   CODE_DEPLOY_GROUP_NAME: ${{ secrets.CODE_DEPLOY_GROUP_NAME }}
@@ -43,20 +44,39 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build \
-            -t "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" \
-            -t "$ECR_REGISTRY/$ECR_REPOSITORY:latest" \
-            -f ./nginx/Dockerfile ./nginx
+            -t "$ECR_REGISTRY/$ECR_NGINX_REPOSITORY:$IMAGE_TAG" \
+            -t "$ECR_REGISTRY/$ECR_NGINX_REPOSITORY:latest" \
+            -f ./nginx/Dockerfile ./web/nginx
 
-          docker push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-          docker push "$ECR_REGISTRY/$ECR_REPOSITORY:latest"
+          docker build \
+            -t "$ECR_REGISTRY/$ECR_FASTAPI_REPOSITORY:$IMAGE_TAG" \
+            -t "$ECR_REGISTRY/$ECR_FASTAPI_REPOSITORY:latest" \
+            -f ./fastapi/Dockerfile ./web/fastapi
+
+          docker push "$ECR_REGISTRY/$ECR_FASTAPI_REPOSITORY:$IMAGE_TAG"
+          docker push "$ECR_REGISTRY/$ECR_FASTAPI_REPOSITORY:latest"
+
+          docker push "$ECR_REGISTRY/$ECR_NGINX_REPOSITORY:$IMAGE_TAG"
+          docker push "$ECR_REGISTRY/$ECR_NGINX_REPOSITORY:latest"
       # 4. (중요) Zip 압축 단계 전에 chmod +x 추가
       - name: Grant execute permission for deployment scripts
         run: chmod +x ./scripts/*.sh
       # 5. CodeDeploy 배포 번들 생성
       - name: Create deployment bundle
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
+          cat > .env <<EOF
+          ECR_REGION=$AWS_REGION
+          ECR_REGISTRY=$ECR_REGISTRY
+          ECR_NGINX_REPOSITORY=$ECR_NGINX_REPOSITORY
+          ECR_FASTAPI_REPOSITORY=$ECR_FASTAPI_REPOSITORY
+          IMAGE_TAG=$IMAGE_TAG
+          EOF
+
           mkdir -p ./build
-          zip -r ./build/bundle.zip appspec.yml ./scripts
+          zip -r ./build/bundle.zip appspec.yml docker-compose.yaml .env ./scripts
       
       # 6. 배포 번들 S3 업로드
       - name: Upload deployment bundle to S3

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>About</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header><div class="wrap nav"><div class="brand">Docker Web Lab</div><nav><a href="/">홈</a><a href="/kubernetes">Kubernetes</a><a href="/status.html">상태 확인</a></nav></div></header>
+<main class="wrap">
+  <section class="hero">
+    <span class="badge">Architecture</span>
+    <h1>서비스 구성</h1>
+    <p>브라우저 요청은 Nginx에서 정적 페이지로 처리되거나 FastAPI로 프록시됩니다.</p>
+  </section>
+  <section class="panel">
+    <pre>Client
+  │
+  ▼
+Nginx :80
+  ├─ /, /about.html, /status.html → Static HTML
+  └─ /kubernetes, /health, /api/* → FastAPI :8000</pre>
+  </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Docker Web Lab</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <div class="brand">Docker Web Lab</div>
+    <nav>
+      <a href="/">홈</a>
+      <a href="/kubernetes">Kubernetes</a>
+      <a href="/status.html">상태 확인</a>
+      <a href="/about.html">소개</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <span class="badge">NGINX + FastAPI + Jinja2</span>
+    <h1>도커 기반 웹 서비스 실습</h1>
+    <p>Nginx는 정적 페이지와 Reverse Proxy를 담당하고, FastAPI는 API와 Jinja2 렌더링을 담당합니다.</p>
+    <div style="margin-top:24px; display:flex; gap:12px; flex-wrap:wrap;">
+      <a class="btn" href="/kubernetes">Kubernetes 보기</a>
+    </div>
+  </section>
+
+  <section class="cards">
+    <a class="card" href="/kubernetes">
+      <h2>Kubernetes</h2>
+      <p>FastAPI와 Jinja2가 동적으로 렌더링하는 쿠버네티스 소개 페이지입니다.</p>
+    </a>
+    <a class="card" href="/status.html">
+      <h2>서비스 상태</h2>
+      <p>FastAPI health 및 API 통신 상태를 브라우저에서 확인합니다.</p>
+    </a>
+    <a class="card" href="/about.html">
+      <h2>서비스 구성</h2>
+      <p>Nginx와 FastAPI의 Reverse Proxy 구조를 확인합니다.</p>
+    </a>
+  </section>
+</main>
+
+<footer>Docker Web Lab</footer>
+</body>
+</html>
