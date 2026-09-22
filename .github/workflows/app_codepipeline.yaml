@@ -49,9 +49,16 @@ jobs:
           docker push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
           docker push "$ECR_REGISTRY/$ECR_REPOSITORY:latest"
       # 4. (중요) Zip 압축 단계 전에 chmod +x 추가
-
+      - name: Grant execute permission for deployment scripts
+        run: chmod +x ./scripts/*.sh
       # 5. CodeDeploy 배포 번들 생성
-
+      - name: Create deployment bundle
+        run: |
+          mkdir -p ./build
+          zip -r ./build/bundle.zip appspec.yml ./scripts
+      
       # 6. 배포 번들 S3 업로드
-
+      - name: Upload deployment bundle to S3
+        run: |
+          aws s3 cp ./build/bundle.zip s3://${{ env.S3_BUCKET_NAME }}/bundle-${{ github.sha }}.zip
       # 7. CodeDeploy 배포 생성
