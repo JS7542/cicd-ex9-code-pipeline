@@ -46,12 +46,12 @@ jobs:
           docker build \
             -t "$ECR_REGISTRY/$ECR_NGINX_REPOSITORY:$IMAGE_TAG" \
             -t "$ECR_REGISTRY/$ECR_NGINX_REPOSITORY:latest" \
-            -f ./nginx/Dockerfile ./web/nginx
+            -f ./web/nginx/Dockerfile ./web/nginx
 
           docker build \
             -t "$ECR_REGISTRY/$ECR_FASTAPI_REPOSITORY:$IMAGE_TAG" \
             -t "$ECR_REGISTRY/$ECR_FASTAPI_REPOSITORY:latest" \
-            -f ./fastapi/Dockerfile ./web/fastapi
+            -f ./web/fastapi/Dockerfile ./web/fastapi
 
           docker push "$ECR_REGISTRY/$ECR_FASTAPI_REPOSITORY:$IMAGE_TAG"
           docker push "$ECR_REGISTRY/$ECR_FASTAPI_REPOSITORY:latest"
