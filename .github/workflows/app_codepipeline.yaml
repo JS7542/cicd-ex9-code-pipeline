@@ -7,6 +7,7 @@ on:
 
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
+  AWS_CODE_DEPLOY_REGION: ${{ secrets.AWS_CODE_DEPLOY_REGION }}
   ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
   S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
   CODE_DEPLOY_APP_NAME: ${{ secrets.CODE_DEPLOY_APP_NAME }}
@@ -68,5 +69,5 @@ jobs:
             --application-name ${{ env.CODE_DEPLOY_APP_NAME }} \
             --deployment-group-name ${{ env.CODE_DEPLOY_GROUP_NAME }} \
             --s3-location bucket=${{ env.S3_BUCKET_NAME }},key=bundle-${{ github.sha }}.zip,bundleType=zip \
-            --region ${{ env.AWS_REGION }} \
+            --region "${{ env.AWS_CODE_DEPLOY_REGION }}" \
             --description "Deployment from GitHub Actions"
