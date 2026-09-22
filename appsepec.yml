@@ -1,0 +1,23 @@
+# CodeDeploy 배포 명세서(설계도, 지침서) - GitHub Actions의 Workflow파일과 같은 역할
+version: 0.0
+os: linux
+
+# S3 번들 파일이 EC2 인스턴스에 복사될 위치 지정
+files:
+  - source: /                                         # 압축 파일 내부의 전체 내용물을 대상으로 함
+    destination: /home/ec2-user/app/                  # EC2 인스턴스의 소스 파일 저장 위치(디렉트로 자동 생성)
+
+# 복사된 파일/폴더 권한 설정
+permissions:
+  - object: /home/ec2-user/app/scripts                # 소유권 변경 대상 지정(.sh 파일에 싱행 권한이 부여되어있어야 한다.)
+    pattern: "**"                                     # * 이면 -R 옵션이 없는 상태(scripts의 바로 아래 파일 혹은 디렉토리만 ) / ** 이면 -R 옵션 적용(하위 모든 파일 및 디렉토리)
+    owner: ec2-user                                   # 소유권 변경 대상의 소유자 지정
+    group: ec2-user                                   # 소유권 변경 대상의 그룹 지정
+    mode: "755"                                       # 소유권 변경 대상의 권한 지정(실행 권한 포함)
+
+#  CodeDeploy 배포 라이프사이클
+hooks:
+  ApplicationStart:
+    - location: scripts/start.sh                      # files.destination의 하위경로, 실행할 스크립트 정의
+      timeout: 300
+      runas: root                                     # 스크립트를 실행할 사용자 지정
