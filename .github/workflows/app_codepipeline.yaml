@@ -56,7 +56,7 @@ jobs:
       - name: Create deployment bundle
         run: |
           mkdir -p ./build
-          zip -r ./build/bundle.zip appsepec.yml ./scripts
+          zip -r ./build/bundle.zip appspec.yml ./scripts
       
       # 6. 배포 번들 S3 업로드
       - name: Upload deployment bundle to S3
